@@ -32,16 +32,16 @@ public class LinkPainter
                 map[i, IndentPosition + j, numberLayer] = paint;
     }
 
-    private void PaintYLine(TypesPoints[,,] map, int numberLayer, TypesPoints paint)
+    public void PaintHalfYLine(TypesPoints[,,] map, int numberLayer, TypesPoints paint)
     {
-        for (int i = 0; i < Size; i++)
+        for (int i = 0; i <= Middle; i++)
             for (int j = 1; j <= LineWigth; j++)
                 map[IndentPosition + j, i, numberLayer] = paint;
     }
 
-    private void PaintHalfYLine(TypesPoints[,,] map, int numberLayer, TypesPoints paint)
+    private void PaintYLine(TypesPoints[,,] map, int numberLayer, TypesPoints paint)
     {
-        for (int i = 0; i <= Middle; i++)
+        for (int i = 0; i < Size; i++)
             for (int j = 1; j <= LineWigth; j++)
                 map[IndentPosition + j, i, numberLayer] = paint;
     }

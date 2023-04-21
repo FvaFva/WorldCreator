@@ -8,21 +8,42 @@ public class WFCTile
     public Position Position { get; private set; }
     public int Count => _links.Count;
     public Link FirstLink => _links.FirstOrDefault();
+    public IReadOnlyList<Link> Links => _links;
+    public int ChanceForReloads { get; private set; }
 
     public WFCTile(List<Link> links, int xPosition, int yPosition)
     {
         _links = new List<Link>(links);
         Position = new Position(xPosition, yPosition, 0);
+        ChanceForReloads = 15;
     }
 
-    public void Collapse(KeyComparer rule)
+    public void Reload(List<Link> links)
+    {
+        _links = new List<Link>(links);
+        ChanceForReloads--;
+    }
+
+    public void SetOneLink(Link link)
+    {
+        _links.Clear();
+        _links.Add(link);
+    }
+
+    public bool TryCollapse(NeighboursCompairer rule)
     {
         List<Link> tempLinks = new List<Link>();
 
         foreach (Link link in _links)
-            if (rule.IsLinkCoincidePreload(link))
+            if (rule.IsLinkCoincideLoadedNeighbourse(link))
                 tempLinks.Add(link);
 
-        _links = tempLinks;
+        if(_links.Count != tempLinks.Count)
+        {
+            _links = tempLinks;
+            return true;
+        }
+
+        return false;
     }
 }

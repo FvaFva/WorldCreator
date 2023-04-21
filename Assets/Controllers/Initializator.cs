@@ -4,6 +4,7 @@ using UnityEngine;
 public class Initializator : MonoBehaviour
 {
     [SerializeField] private UserInput inputer;
+    [SerializeField] private int _countTiles;
 
     private MapRouter _router;
     private LinkFactory _loader;
@@ -27,9 +28,10 @@ public class Initializator : MonoBehaviour
         _settings.SetFillersHeight(2);
         _loader = new LinkFactory(_settings);
         _loader.InitClearSpaces();
+        _loader.InitLowr(TypesPoints.FillerTwo);
         _loader.InitWays(TypesPoints.FillerOne, TypesPoints.Middler);
         _loader.InitWalls(TypesPoints.FillerOne, TypesPoints.Higher);
-        _factory = new MapFactory(_loader.Links, 2);
+        _factory = new MapFactory(_loader.Links, _loader.Zero, _countTiles);
         _router.Init(_factory);
     }
 

@@ -1,59 +1,150 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
+using UnityEngine.UIElements;
 
 public class WaveColapsCreator
 {
-    private List<WFCTile> _tilesMap;
-    KeyComparer _comparer = new KeyComparer();
+    private List<WFCTile> _tilesMap = new List<WFCTile>();
+    private Random _random = new Random();
+    private List<Link> _linksPreset = new List<Link>();
+    private NeighboursCompairer _comparer = new NeighboursCompairer();
+    private WFCTile _curent;
+    private Queue<WFCTile> _queue = new Queue<WFCTile>();
+    private Dictionary<LinkKeyDirections, WFCTile> _curentNeighbours = new Dictionary<LinkKeyDirections, WFCTile>();
+    private Link _zero;
+
+    public WaveColapsCreator(Link zero)
+    {
+        _zero = zero;
+    }
 
     public Map Create(List<Link> linksPreset, int size)
     {
+        _linksPreset = linksPreset;
+        InitTaleMap(size);
+        InitFirst();
+        InitCurentInQueue();
+        AddCurentNeighboursToQueue();
+        Colapse();
+
+        return CompositeMap();
+    }
+
+    private Map CompositeMap()
+    {
         Map map = new Map();
-        
-        InitTaleMap(linksPreset, size, out WFCTile first);
-        
+
+        foreach (WFCTile tile in _tilesMap.Where(tile => tile.Count>0))
+            foreach(MapPoint point in tile.FirstLink.BroadcastLoaclMapToWorld(tile.Position)) 
+                map.AddPoint(point);
+
         return map;
     }
 
-    private void ColapseNeighbours(WFCTile tile, out WFCTile next)
+    private void Colapse()
     {
-        _comparer.LoadKey(tile.FirstLink.Top);
-        List<WFCTile> Neighbours = GetNeighbours(tile.Position);
+        int countWaves = 40;
+        int wave = 0;
+
+        while (wave < countWaves)
+        {
+            while (_queue.Count > 0)
+            {           
+                InitCurentInQueue();
+                _comparer.LoadNeighbours(_curentNeighbours);
+
+                if (_curent.TryCollapse(_comparer))
+                {  
+                    if (_curent.Count == 0  )
+                    {
+                        if(_curent.ChanceForReloads > 0)
+                        {
+                            _curent.Reload(_linksPreset);
+                            _queue.Enqueue(_curent);
+                            ReloadNeighbours();
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
+
+                    AddCurentNeighboursToQueue();
+                }
+            }
+
+            wave++;
+            int maxLinksInTile = _tilesMap.Max(tile => tile.Count);
+
+            if (maxLinksInTile == 1)
+                break;
+
+            _queue.Enqueue(_tilesMap.Where(tile => tile.Count == maxLinksInTile).First());
+            InitCurentInQueue();
+            RandomizeCurentLinks();
+            AddCurentNeighboursToQueue();
+        }
+
+        foreach (WFCTile tile in _tilesMap.Where(tile => tile.Count == 0))
+            tile.SetOneLink(_zero);
+    }
+
+    private void ReloadNeighbours()
+    {
+        foreach (WFCTile tile in _curentNeighbours.Values)
+            tile.Reload(_linksPreset);
+    }
+
+    private void RandomizeCurentLinks()
+    {
+        Link randomLink = _curent.Links[_random.Next(_curent.Count)];
+        _curent.SetOneLink(randomLink);
+    }
+
+    private void AddCurentNeighboursToQueue()
+    {
+        foreach (var tile in _curentNeighbours.Values.Where(it => it != null)) 
+            _queue.Enqueue(tile);
+    }
+
+    private void InitCurentInQueue()
+    {
+        _curent = _queue.Dequeue();
+        Position pos = _curent.Position;
+        _curentNeighbours.Clear();
         
-        next = 
+        TryAddToNeighbours(LinkKeyDirections.Top, pos.X, pos.Y + 1);
+        TryAddToNeighbours(LinkKeyDirections.Bottom, pos.X, pos.Y - 1);
+        TryAddToNeighbours(LinkKeyDirections.Left, pos.X - 1, pos.Y);
+        TryAddToNeighbours(LinkKeyDirections.Right, pos.X + 1, pos.Y);
     }
 
-    private List<WFCTile> GetNeighbours(Position position)
+    private void TryAddToNeighbours(LinkKeyDirections direction, int posX, int posY)
     {
-        return _tilesMap.Where(tile => 
-        (tile.Position.X == position.X-1 && tile.Position.Y == position.Y) ||
-        (tile.Position.X == position.X && tile.Position.Y-1 == position.Y) ||
-        (tile.Position.X == position.X+1 && tile.Position.Y == position.Y) ||
-        (tile.Position.X == position.X && tile.Position.Y+1 == position.Y)).ToList();
+        WFCTile temp = _tilesMap.Where(t => t.Position.X == posX && t.Position.Y == posY).FirstOrDefault();
+
+        if (temp != null)
+            _curentNeighbours.Add(direction, temp);
     }
 
-    private void InitTaleMap(List<Link> linksPreset, int size, out WFCTile first)
+    private void InitTaleMap(int size)
     {
         _tilesMap = new List<WFCTile>();
 
         for (int i = 0; i < size; i++)
             for (int j = 0; j < size; j++)
-                _tilesMap.Add(new WFCTile(linksPreset, i, j));
-
-        first = GenerateFirst(linksPreset);
+                _tilesMap.Add(new WFCTile(_linksPreset, i, j));
     }
 
-    private WFCTile GenerateFirst(List<Link> linksPreset)
-    {
-        Random random = new Random();
+    private void InitFirst()
+    {        
         List<Link> firstTileList = new List<Link>();
-        int firstPosition = random.Next(_tilesMap.Count);
+        int firstPosition = _random.Next(_tilesMap.Count);
         WFCTile first = _tilesMap[firstPosition];
-        firstTileList.Add(linksPreset[random.Next(linksPreset.Count)]);
-        first = new WFCTile(firstTileList, first.Position.X, first.Position.Y);
-        _tilesMap[firstPosition] = first;
-
-        return first;
+        firstTileList.Add(_linksPreset[_random.Next(_linksPreset.Count)]);
+        first.Reload(firstTileList);
+        _queue.Enqueue(first);
     }
 }

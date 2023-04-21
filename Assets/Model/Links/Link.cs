@@ -3,9 +3,10 @@ using System.Linq;
 
 public class Link 
 {
+    private const int Size = MainSettings.LinkSize;
+
     private TypesPoints[,,] _map;
-    private int _mapSize;
-    private List<LinkKey> _keys;
+    private List<LinkKey> _keys = new List<LinkKey>();
 
     public LinkKey Top => GetKey(LinkKeyDirections.Top);
     public LinkKey Bottom => GetKey(LinkKeyDirections.Bottom);
@@ -15,7 +16,6 @@ public class Link
     public Link(TypesPoints[,,] map)
     {
         _map = map;
-        _mapSize = map.GetLength(0);
         CreateKeys();
         DescripteKeys();
     }
@@ -27,8 +27,8 @@ public class Link
 
     public IEnumerable<MapPoint> BroadcastLoaclMapToWorld(Position worldPosition)
     {
-        int xShift = worldPosition.X * _mapSize;
-        int yShift = worldPosition.Y * _mapSize;
+        int xShift = worldPosition.X * Size;
+        int yShift = worldPosition.Y * Size;
 
         for (var i = 0; i < _map.GetLength(0); i++)
             for(var j = 0; j < _map.GetLength(1); j++)
@@ -46,17 +46,16 @@ public class Link
 
     private void DescripteKeys()
     {
-        int high = _map.GetLength(2);
+        int lastPoaition = Size - 1;
 
-        for (int i = 0; i < _mapSize; i++)
+        for (int i = 0; i <= lastPoaition; i++)
         { 
-            for (int j = 0; j < high; j++)
+            for (int j = 0; j <= lastPoaition; j++)
             {
                 Left.AddKey(_map[0, i, j]);
-                Right.AddKey(_map[_mapSize - 1, i, j]);
-
+                Right.AddKey(_map[lastPoaition, i, j]);
                 Bottom.AddKey(_map[i, 0, j]);
-                Top.AddKey(_map[i, _mapSize - 1, j]);
+                Top.AddKey(_map[i, lastPoaition, j]);
             }
         }
     }

@@ -1,5 +1,6 @@
 
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 
 public class LinkFiller 
 {
@@ -28,6 +29,23 @@ public class LinkFiller
             for (int j = Half; j < Size; j++)
                 maps[i, j, numberLayer] = fillerTwo;
 
+        }
+    }
+
+    public void FillQuarte(TypesPoints[,,] map, TypesPoints quarter, TypesPoints filler, int numberLayer)
+    {
+        for (int i = 0; i < Half; i++)
+        {
+            for (int j = 0; j < Half; j++)
+                map[i, j, numberLayer] = quarter;
+            for (int j = Half; j < Size; j++)
+                map[i, j, numberLayer] = filler;
+        }
+
+        for (int i = Half; i < Size; i++)
+        {
+            for (int j = 0; j < Size; j++)
+                map[i, j, numberLayer] = filler;
         }
     }
 

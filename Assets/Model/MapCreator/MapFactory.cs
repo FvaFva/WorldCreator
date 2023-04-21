@@ -8,30 +8,42 @@ public class MapFactory : IMapFactory
     private const int MinLinksInRow = 1;
 
     private List<Link> _linksPreset = new List<Link>();
+    private Link _zero;
     private int _linksInRow;
     private System.Random _random = new System.Random();
 
     public event Action<IMap> MapCreated;
 
-    public MapFactory(IReadOnlyList<Link> linksPreset, int linksInRow)
+    public MapFactory(IReadOnlyList<Link> linksPreset, Link Zero, int linksInRow)
     {
-        LoadLinks(linksPreset);
+        _linksPreset = new List<Link>(linksPreset);
         _linksInRow = Math.Clamp(linksInRow, MinLinksInRow, linksInRow);
+        _zero = Zero;
     }
 
     public void CreateWaveColapsMap()
     {
-        WaveColapsCreator creator = new WaveColapsCreator();
+        WaveColapsCreator creator = new WaveColapsCreator(_zero);
         MapCreated?.Invoke(creator.Create(_linksPreset, _linksInRow));
     }
 
     public void ShowAllLinks()
     {
         Map map = new Map();
+        int y = -1;
+        bool isLaststartZero = false;
+        int xLenth = (int)Math.Sqrt(_linksPreset.Count);
+        int x = xLenth;
 
-        for(int i = 0; i < _linksPreset.Count; i++)
-            foreach (MapPoint point in _linksPreset[i].BroadcastLoaclMapToWorld(new Position(i, 0, 0)))
+        foreach(Link link in _linksPreset)
+        {
+            Position position = UpdateChassePoaition(ref x, ref y, xLenth, ref isLaststartZero);
+
+            foreach (MapPoint point in link.BroadcastLoaclMapToWorld(position))
+            {
                 map.AddPoint(point);
+            }
+        }
 
         Debug.Log($"{map.Points.Max(point => point.Position.X)} {map.Points.Max(point => point.Position.Y)} {map.Points.Max(point => point.Position.Z)}");
         MapCreated?.Invoke(map);
@@ -62,14 +74,23 @@ public class MapFactory : IMapFactory
         MapCreated?.Invoke(map);
     }
 
-    private void LoadLinks(IReadOnlyList<Link> preset)
+    private Position UpdateChassePoaition(ref int x,ref int y, int leng, ref bool isLaststartZero)
     {
-        foreach(Link link in preset)
+        if (x >= leng)
         {
-            if (_linksPreset.Contains(link))
-                continue;
+            if (isLaststartZero)
+                x = 1;
+            else
+                x = 0;
 
-            _linksPreset.Add(link);
+            isLaststartZero = !isLaststartZero;
+            y++;
         }
+        else
+        {
+            x += 2;
+        }
+
+        return new Position(x, y, 0);
     }
 }

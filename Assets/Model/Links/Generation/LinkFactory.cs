@@ -8,12 +8,15 @@ public class LinkFactory
     private LinkPainter _painter = new LinkPainter();
 
     public IReadOnlyList<Link> Links => _storage.Links;
+    public Link Zero { get; private set; }
 
     public LinkFactory(LinkLoaderSettings settings)
     {
         _settings = settings;
         _settings.SettingsUpdated += UpdateSettings;
+        Zero = new Link(_filler.InitClearMap());
     }
+
     ~LinkFactory()
     {
         _settings.SettingsUpdated -= UpdateSettings;
@@ -21,20 +24,49 @@ public class LinkFactory
 
     public void InitClearSpaces()
     {
-        TypesPoints[,,] cleaFerst = _filler.InitClearMap();
-        TypesPoints[,,] cleaSecond = _filler.InitClearMap();
-        TypesPoints[,,] halfer = _filler.InitClearMap();
+        List<TypesPoints[,,]> temp = new List<TypesPoints[,,]>();
 
-        for (int k = 0; k <= _settings.FillersHeight; k++)
+        TypesPoints[,,] cleaFerst = _filler.InitClearMap(temp);
+        TypesPoints[,,] cleaSecond = _filler.InitClearMap(temp);
+        TypesPoints[,,] halfer = _filler.InitClearMap(temp);
+        TypesPoints[,,] quarter = _filler.InitClearMap(temp);
+
+        for (int i = 0; i <= _settings.FillersHeight; i++)
         {
-            _filler.FillLayer(cleaFerst, k, TypesPoints.FillerOne);
-            _filler.FillLayer(cleaSecond, k, TypesPoints.FillerTwo);
-            _filler.FillDoubleLayer(halfer, TypesPoints.FillerTwo, TypesPoints.FillerOne, k);
+            _filler.FillLayer(cleaFerst, i, TypesPoints.FillerOne);
+            _filler.FillLayer(cleaSecond, i, TypesPoints.FillerTwo);
+            _filler.FillDoubleLayer(halfer, TypesPoints.FillerTwo, TypesPoints.FillerOne, i);
+            _filler.FillQuarte(quarter, TypesPoints.FillerTwo, TypesPoints.FillerOne, i);
         }
 
-        _storage.AddLink(halfer);
-        _storage.AddLink(cleaFerst);
-        _storage.AddLink(cleaSecond);
+        _storage.AddLink(temp);
+    }
+
+    public void InitLowr(TypesPoints filler)
+    {
+        List<TypesPoints[,,]> temp = new List<TypesPoints[,,]>();
+        TypesPoints[,,] clea = _filler.InitClearMap(temp);
+        TypesPoints[,,] halfer = _filler.InitClearMap(temp);
+        TypesPoints[,,] quarter = _filler.InitClearMap(temp);
+        TypesPoints[,,] creekOne = _filler.InitClearMap(temp);
+        TypesPoints[,,] creekTwo = _filler.InitClearMap(temp);
+
+        for (int i = 0; i < _settings.FillersHeight; i++)
+        {
+            _filler.FillLayer(clea, i, filler);
+            _filler.FillLayer(creekTwo, i, filler);
+            _filler.FillDoubleLayer(halfer, filler, TypesPoints.Lower, i);
+            _filler.FillQuarte(quarter, filler, TypesPoints.Lower, i);
+            _filler.FillDoubleLayer(creekOne, filler, TypesPoints.Lower, i);
+        }
+
+        _filler.FillLayer(creekTwo, _settings.FillersHeight, filler);
+        _filler.FillDoubleLayer(halfer, filler, TypesPoints.Space, _settings.FillersHeight);
+        _filler.FillQuarte(quarter, filler, TypesPoints.Space, _settings.FillersHeight);
+        _filler.FillDoubleLayer(creekOne, filler, TypesPoints.Space, _settings.FillersHeight);
+        _painter.PaintHalfYLine(creekOne, _settings.FillersHeight, TypesPoints.Lower);
+        _painter.PaintHalfYLine(creekTwo, _settings.FillersHeight, TypesPoints.Lower);
+        _storage.AddLink(temp);
     }
 
     public void InitWays(TypesPoints filler, TypesPoints way)
@@ -52,7 +84,9 @@ public class LinkFactory
     {
         List<TypesPoints[,,]> temp = InitBaseWays(wall, _settings.FillersHeight + 1);
         TypesPoints[,,] halfWall = _filler.InitClearMap(temp);
+        TypesPoints[,,] quarterWall = _filler.InitClearMap(temp);
         _filler.FillDoubleLayer(halfWall, TypesPoints.Space, TypesPoints.Higher, _settings.FillersHeight + 1);
+        _filler.FillQuarte(quarterWall, TypesPoints.Space, TypesPoints.Higher, _settings.FillersHeight + 1);
         _painter.PaintTurn(halfWall, _settings.FillersHeight + 1, TypesPoints.Higher);
 
         for (int k = 0; k <= _settings.FillersHeight; k++)
