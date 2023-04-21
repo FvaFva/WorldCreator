@@ -8,7 +8,7 @@ public class LinkRotator
     {
         if(IsRotatableLink(baseLink, out int countInvariants))
         {
-            foreach(Link link in GetInvariants(map, countInvariants))
+            foreach(Link link in GetInvariants(map, countInvariants, baseLink.Weight))
                 yield return link;
         }
 
@@ -44,13 +44,13 @@ public class LinkRotator
         return 4;
     }
 
-    private IEnumerable<Link> GetInvariants(TypesPoints[,,] map, int count)
+    private IEnumerable<Link> GetInvariants(TypesPoints[,,] map, int count, int baseWeight)
     {
         TypesPoints[,,] temp = Rotate90(map);
 
         for (int i = 1; i < count; i++)
         {
-            yield return new Link(temp);
+            yield return new Link(new LinkMap(temp, baseWeight));
             temp = Rotate90(temp);
         }
     }

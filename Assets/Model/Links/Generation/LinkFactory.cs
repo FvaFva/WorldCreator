@@ -3,117 +3,69 @@ using System.Collections.Generic;
 public class LinkFactory 
 {
     private LinksCompiler _storage = new LinksCompiler();
-    private LinkLoaderSettings _settings;
-    private LinkFiller _filler = new LinkFiller();
-    private LinkPainter _painter = new LinkPainter();
+    private LinkFactorySupport _support;
+    private List<BaseLinkFactoryWorker> _workers = new List<BaseLinkFactoryWorker>();
 
     public IReadOnlyList<Link> Links => _storage.Links;
     public Link Zero { get; private set; }
 
-    public LinkFactory(LinkLoaderSettings settings)
+    public LinkFactory(LinkFactorySupport support)
     {
-        _settings = settings;
-        _settings.SettingsUpdated += UpdateSettings;
-        Zero = new Link(_filler.InitClearMap());
+        _support = support;
+        _support.SettingsUpdated += UpdateSettings;
+        Zero = new Link(support.Filler.InitClearMap(0));
     }
 
     ~LinkFactory()
     {
-        _settings.SettingsUpdated -= UpdateSettings;
+        _support.SettingsUpdated -= UpdateSettings;
     }
 
     public void InitClearSpaces()
     {
-        List<TypesPoints[,,]> temp = new List<TypesPoints[,,]>();
-
-        TypesPoints[,,] cleaFerst = _filler.InitClearMap(temp);
-        TypesPoints[,,] cleaSecond = _filler.InitClearMap(temp);
-        TypesPoints[,,] halfer = _filler.InitClearMap(temp);
-        TypesPoints[,,] quarter = _filler.InitClearMap(temp);
-
-        for (int i = 0; i <= _settings.FillersHeight; i++)
-        {
-            _filler.FillLayer(cleaFerst, i, TypesPoints.FillerOne);
-            _filler.FillLayer(cleaSecond, i, TypesPoints.FillerTwo);
-            _filler.FillDoubleLayer(halfer, TypesPoints.FillerTwo, TypesPoints.FillerOne, i);
-            _filler.FillQuarte(quarter, TypesPoints.FillerTwo, TypesPoints.FillerOne, i);
-        }
-
-        _storage.AddLink(temp);
+        ComingNewWorker(new ClearLinkFactoryWorker(_support));
     }
 
-    public void InitLowr(TypesPoints filler)
+    public void InitBridgies(TypesPoints filler)
     {
-        List<TypesPoints[,,]> temp = new List<TypesPoints[,,]>();
-        TypesPoints[,,] clea = _filler.InitClearMap(temp);
-        TypesPoints[,,] halfer = _filler.InitClearMap(temp);
-        TypesPoints[,,] quarter = _filler.InitClearMap(temp);
-        TypesPoints[,,] creekOne = _filler.InitClearMap(temp);
-        TypesPoints[,,] creekTwo = _filler.InitClearMap(temp);
+        ComingNewWorker(new BridgeLinkFactoryWorker(filler, _support));
+    }
 
-        for (int i = 0; i < _settings.FillersHeight; i++)
-        {
-            _filler.FillLayer(clea, i, filler);
-            _filler.FillLayer(creekTwo, i, filler);
-            _filler.FillDoubleLayer(halfer, filler, TypesPoints.Lower, i);
-            _filler.FillQuarte(quarter, filler, TypesPoints.Lower, i);
-            _filler.FillDoubleLayer(creekOne, filler, TypesPoints.Lower, i);
-        }
-
-        _filler.FillLayer(creekTwo, _settings.FillersHeight, filler);
-        _filler.FillDoubleLayer(halfer, filler, TypesPoints.Space, _settings.FillersHeight);
-        _filler.FillQuarte(quarter, filler, TypesPoints.Space, _settings.FillersHeight);
-        _filler.FillDoubleLayer(creekOne, filler, TypesPoints.Space, _settings.FillersHeight);
-        _painter.PaintHalfYLine(creekOne, _settings.FillersHeight, TypesPoints.Lower);
-        _painter.PaintHalfYLine(creekTwo, _settings.FillersHeight, TypesPoints.Lower);
-        _storage.AddLink(temp);
+    public void InitLower(TypesPoints filler)
+    {
+        ComingNewWorker(new LowerLinkFactoryWorker(filler, _support));
     }
 
     public void InitWays(TypesPoints filler, TypesPoints way)
     {
-        List<TypesPoints[,,]> temp = InitBaseWays(way, _settings.FillersHeight);
-
-        for (int k = 0; k < _settings.FillersHeight; k++)
-            _filler.FillLayer(temp, k, filler);
-
-        _filler.FillSpace(temp, _settings.FillersHeight, filler);
-        _storage.AddLink(temp);
+        ComingNewWorker(new WayLinkFactoryWorker(way, filler, _support));
     }
 
-    public void InitWalls(TypesPoints filler, TypesPoints wall)
+    public void InitHeight(TypesPoints filler, TypesPoints wall)
     {
-        List<TypesPoints[,,]> temp = InitBaseWays(wall, _settings.FillersHeight + 1);
-        TypesPoints[,,] halfWall = _filler.InitClearMap(temp);
-        TypesPoints[,,] quarterWall = _filler.InitClearMap(temp);
-        _filler.FillDoubleLayer(halfWall, TypesPoints.Space, TypesPoints.Higher, _settings.FillersHeight + 1);
-        _filler.FillQuarte(quarterWall, TypesPoints.Space, TypesPoints.Higher, _settings.FillersHeight + 1);
-        _painter.PaintTurn(halfWall, _settings.FillersHeight + 1, TypesPoints.Higher);
+        ComingNewWorker(new HeightLinkFactoryWorker(wall, filler, _support));
+    } 
 
-        for (int k = 0; k <= _settings.FillersHeight; k++)
-            _filler.FillLayer(temp, k, filler);
-
-        _storage.AddLink(temp);
+    private void ComingNewWorker(BaseLinkFactoryWorker worker)
+    {
+        worker.Work();
+        _workers.Add(worker);
+        _storage.AddLink(worker.WorcResult);
     }
 
-    private List<TypesPoints[,,]> InitBaseWays(TypesPoints way, int height)
+    private void ReworkAll()
     {
-        List<TypesPoints[,,]> temp = new List<TypesPoints[,,]>();
+        _storage.Cleare();
 
-        TypesPoints[,,] cross = _filler.InitClearMap(temp);
-        TypesPoints[,,] impasse = _filler.InitClearMap(temp);
-        TypesPoints[,,] line = _filler.InitClearMap(temp);
-        TypesPoints[,,] turn = _filler.InitClearMap(temp);
-
-        _painter.PaintHalfXLine(impasse, height, way);
-        _painter.PaintCross(cross, height, way);
-        _painter.PaintXLine(line, height, way);
-        _painter.PaintTurn(turn, height, way);
-
-        return temp;
+        foreach(BaseLinkFactoryWorker worker in _workers)
+        {
+            worker.ReWork();
+            _storage.AddLink(worker.WorcResult);
+        }
     }
 
     private void UpdateSettings()
     {
-
+        ReworkAll();
     }
 }

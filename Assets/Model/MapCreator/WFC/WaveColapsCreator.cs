@@ -99,8 +99,13 @@ public class WaveColapsCreator
 
     private void RandomizeCurentLinks()
     {
-        Link randomLink = _curent.Links[_random.Next(_curent.Count)];
+        Link randomLink = _curent.Links.Max(link => WeighLink(link));
         _curent.SetOneLink(randomLink);
+    }
+
+    private int WeighLink(Link link)
+    {
+        return _random.Next(link.Weight);
     }
 
     private void AddCurentNeighboursToQueue()

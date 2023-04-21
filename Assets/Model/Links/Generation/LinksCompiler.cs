@@ -7,19 +7,24 @@ public class LinksCompiler
 
     public IReadOnlyList<Link> Links => _links;
 
-    public void AddLink(TypesPoints[,,] map)
+    public void Cleare()
+    {
+        _links.Clear();
+    }
+
+    public void AddLink(LinkMap map)
     {
         Link tempLink = new Link(map);
         TryAddLink(tempLink);
 
-        foreach (Link ratatedLink in _rotator.TryRotate(tempLink, map))
+        foreach (Link ratatedLink in _rotator.TryRotate(tempLink, map.Map))
             TryAddLink(ratatedLink);
     }
 
-    public void AddLink(List<TypesPoints[,,]> maps)
+    public void AddLink(IReadOnlyList<LinkMap> maps)
     {
         if(maps != null)
-            foreach(TypesPoints[,,] map in maps)
+            foreach(LinkMap map in maps)
                 AddLink(map);
     }
 

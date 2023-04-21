@@ -6,43 +6,50 @@ public class LinkPainter
     private const int Size = MainSettings.LinkSize;
     private const int Middle = IndentPosition + LineWigth;
 
-    public void PaintCross(TypesPoints[,,] map, int numberLayer, TypesPoints paint)
+    public void PaintCross(LinkMap map, int numberLayer, TypesPoints paint)
     {
         PaintXLine(map, numberLayer, paint);
         PaintYLine(map, numberLayer, paint);
     }
 
-    public void PaintTurn(TypesPoints[,,] map, int numberLayer, TypesPoints paint)
+    public void PaintTurn(LinkMap map, int numberLayer, TypesPoints paint)
     {
         PaintHalfXLine(map, numberLayer, paint);
         PaintHalfYLine(map, numberLayer, paint);
     }
 
-    public void PaintXLine(TypesPoints[,,] map, int numberLayer, TypesPoints paint)
+    public void PaintXLine(LinkMap map, int numberLayer, TypesPoints paint)
     {
         for (int i = 0; i < Size; i++)
             for (int j = 1; j <= LineWigth; j++)
-                map[i, IndentPosition + j, numberLayer] = paint;
+                map.Map[i, IndentPosition + j, numberLayer] = paint;
     }
 
-    public void PaintHalfXLine(TypesPoints[,,] map, int numberLayer, TypesPoints paint)
+    public void PaintHalfXLine(LinkMap map, int numberLayer, TypesPoints paint)
     {
         for (int i = 0; i <= Middle; i++)
             for (int j = 1; j <= LineWigth; j++)
-                map[i, IndentPosition + j, numberLayer] = paint;
+                map.Map[i, IndentPosition + j, numberLayer] = paint;
     }
 
-    public void PaintHalfYLine(TypesPoints[,,] map, int numberLayer, TypesPoints paint)
+    public void PaintHalfYLine(LinkMap map, int numberLayer, TypesPoints paint)
     {
         for (int i = 0; i <= Middle; i++)
             for (int j = 1; j <= LineWigth; j++)
-                map[IndentPosition + j, i, numberLayer] = paint;
+                map.Map[IndentPosition + j, i, numberLayer] = paint;
     }
 
-    private void PaintYLine(TypesPoints[,,] map, int numberLayer, TypesPoints paint)
+    public void PaintBackHalfYLine(LinkMap map, int numberLayer, TypesPoints paint)
+    {
+        for (int i = Middle; i < Size; i++)
+            for (int j = 1; j <= LineWigth; j++)
+                map.Map[IndentPosition + j, i, numberLayer] = paint;
+    }
+
+    private void PaintYLine(LinkMap map, int numberLayer, TypesPoints paint)
     {
         for (int i = 0; i < Size; i++)
             for (int j = 1; j <= LineWigth; j++)
-                map[IndentPosition + j, i, numberLayer] = paint;
+                map.Map[IndentPosition + j, i, numberLayer] = paint;
     }
 }

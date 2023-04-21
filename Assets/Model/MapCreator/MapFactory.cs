@@ -45,7 +45,7 @@ public class MapFactory : IMapFactory
             }
         }
 
-        Debug.Log($"{map.Points.Max(point => point.Position.X)} {map.Points.Max(point => point.Position.Y)} {map.Points.Max(point => point.Position.Z)}");
+ 
         MapCreated?.Invoke(map);
     }
 

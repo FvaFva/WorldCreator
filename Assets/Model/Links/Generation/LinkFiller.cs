@@ -1,72 +1,70 @@
-
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 
 public class LinkFiller 
 {
     private const int Size = MainSettings.LinkSize;
     private const int Half = Size / 2;
 
-    public void FillLayer(TypesPoints[,,] map, int numberLayer, TypesPoints filler)
+    public void FillLayer(LinkMap map, int numberLayer, TypesPoints filler)
     {
         for (int i = 0; i < Size; i++)        
             for (int j = 0; j < Size; j++)            
-                map[i, j, numberLayer] = filler;            
+                map.Map[i, j, numberLayer] = filler;            
     }
 
-    public void FillLayer(List<TypesPoints[,,]> maps, int numberLayer, TypesPoints filler)
+    public void FillLayer(List<LinkMap> maps, int numberLayer, TypesPoints filler)
     {
-        foreach (TypesPoints[,,] temp in maps)
+        foreach (LinkMap temp in maps)
             FillLayer(temp, numberLayer, filler);
     }
 
-    public void FillDoubleLayer(TypesPoints[,,] maps, TypesPoints fillerOne, TypesPoints fillerTwo, int numberLayer)
+    public void FillDoubleLayer(LinkMap map, TypesPoints fillerOne, TypesPoints fillerTwo, int numberLayer)
     {
         for (int i = 0; i < Size; i++)
         {
             for (int j = 0; j < Half; j++)
-                maps[i, j, numberLayer] = fillerOne;
+                map.Map[i, j, numberLayer] = fillerOne;
             for (int j = Half; j < Size; j++)
-                maps[i, j, numberLayer] = fillerTwo;
+                map.Map[i, j, numberLayer] = fillerTwo;
 
         }
     }
 
-    public void FillQuarte(TypesPoints[,,] map, TypesPoints quarter, TypesPoints filler, int numberLayer)
+    public void FillQuarte(LinkMap map, TypesPoints quarter, TypesPoints filler, int numberLayer)
     {
         for (int i = 0; i < Half; i++)
         {
             for (int j = 0; j < Half; j++)
-                map[i, j, numberLayer] = quarter;
+                map.Map[i, j, numberLayer] = quarter;
             for (int j = Half; j < Size; j++)
-                map[i, j, numberLayer] = filler;
+                map.Map[i, j, numberLayer] = filler;
         }
 
         for (int i = Half; i < Size; i++)
         {
             for (int j = 0; j < Size; j++)
-                map[i, j, numberLayer] = filler;
+                map.Map[i, j, numberLayer] = filler;
         }
     }
 
-    public void FillSpace(List<TypesPoints[,,]> maps, int numberLayer, TypesPoints filler)
+    public void FillSpace(List<LinkMap> maps, int numberLayer, TypesPoints filler)
     {
         for (int i = 0; i < Size; i++)        
             for (int j = 0; j < Size; j++)            
-                foreach (TypesPoints[,,] map in maps)
-                    if(map[i, j, numberLayer] == TypesPoints.Space)
-                        map[i, j, numberLayer] = filler;
+                foreach (LinkMap map in maps)
+                    if(map.Map[i, j, numberLayer] == TypesPoints.Space)
+                        map.Map[i, j, numberLayer] = filler;
             
     }
 
-    public TypesPoints[,,] InitClearMap(List<TypesPoints[,,]> temp)
+    public LinkMap InitClearMap(List<LinkMap> temp, int weight)
     {
-        temp.Add(new TypesPoints[Size, Size, Size]);
+        temp.Add(InitClearMap(weight));
         return temp[temp.Count - 1];
     }
 
-    public TypesPoints[,,] InitClearMap()
+    public LinkMap InitClearMap(int weight)
     {
-        return new TypesPoints[Size, Size, Size];
+        return new LinkMap(new TypesPoints[Size, Size, Size], weight);
     }
 }

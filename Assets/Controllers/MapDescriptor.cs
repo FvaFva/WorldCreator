@@ -31,7 +31,11 @@ public class MapDescriptor : MonoBehaviour
 
         foreach(MapPoint point in map)
         {
-            BlockPreset currentPrefab = _cashedTypesPrefab[point.Type];
+            BlockPreset currentPrefab = null;
+
+            if (_cashedTypesPrefab.ContainsKey(point.Type))
+                currentPrefab = _cashedTypesPrefab[point.Type];
+
             descriptedMap[point.Position.X, point.Position.Y, point.Position.Z] = currentPrefab;
         }
 

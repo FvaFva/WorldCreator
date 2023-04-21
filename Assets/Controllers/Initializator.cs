@@ -9,7 +9,7 @@ public class Initializator : MonoBehaviour
     private MapRouter _router;
     private LinkFactory _loader;
     private MapFactory _factory;
-    private LinkLoaderSettings _settings;
+    private LinkFactorySupport _settings;
 
     private void OnEnable()
     {
@@ -24,13 +24,14 @@ public class Initializator : MonoBehaviour
     private void Awake()
     {
         TryGetComponent<MapRouter>(out _router);
-        _settings = new LinkLoaderSettings();
+        _settings = new LinkFactorySupport();
         _settings.SetFillersHeight(2);
         _loader = new LinkFactory(_settings);
         _loader.InitClearSpaces();
-        _loader.InitLowr(TypesPoints.FillerTwo);
+        _loader.InitBridgies(TypesPoints.FillerTwo);
+        _loader.InitLower(TypesPoints.FillerTwo);
         _loader.InitWays(TypesPoints.FillerOne, TypesPoints.Middler);
-        _loader.InitWalls(TypesPoints.FillerOne, TypesPoints.Higher);
+        _loader.InitHeight(TypesPoints.FillerOne, TypesPoints.Higher);
         _factory = new MapFactory(_loader.Links, _loader.Zero, _countTiles);
         _router.Init(_factory);
     }
