@@ -4,11 +4,11 @@ public class LinkRotator
 {
     private KeyComparer _keyComparer = new KeyComparer();
 
-    public IEnumerable<Link> TryRotate(Link baseLink, TypesPoints[,,] map)
+    public IEnumerable<Link> TryRotate(Link baseLink, LinkMap map)
     {
         if(IsRotatableLink(baseLink, out int countInvariants))
         {
-            foreach(Link link in GetInvariants(map, countInvariants, baseLink.Weight))
+            foreach(Link link in GetInvariants(map, countInvariants))
                 yield return link;
         }
 
@@ -44,13 +44,13 @@ public class LinkRotator
         return 4;
     }
 
-    private IEnumerable<Link> GetInvariants(TypesPoints[,,] map, int count, int baseWeight)
+    private IEnumerable<Link> GetInvariants(LinkMap map, int count)
     {
-        TypesPoints[,,] temp = Rotate90(map);
+        TypesPoints[,,] temp = Rotate90(map.Map);
 
         for (int i = 1; i < count; i++)
         {
-            yield return new Link(new LinkMap(temp, baseWeight));
+            yield return new Link(new LinkMap(temp, map.TypeWeight, map.Coefficient));
             temp = Rotate90(temp);
         }
     }

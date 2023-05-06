@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
 
 public class MapFactory : IMapFactory
 {
@@ -10,15 +8,20 @@ public class MapFactory : IMapFactory
     private List<Link> _linksPreset = new List<Link>();
     private Link _zero;
     private int _linksInRow;
-    private System.Random _random = new System.Random();
+    private Random _random = new Random();
 
     public event Action<IMap> MapCreated;
 
     public MapFactory(IReadOnlyList<Link> linksPreset, Link Zero, int linksInRow)
     {
-        _linksPreset = new List<Link>(linksPreset);
+        UpdateLinks(linksPreset);
         _linksInRow = Math.Clamp(linksInRow, MinLinksInRow, linksInRow);
         _zero = Zero;
+    }
+
+    public void UpdateLinks(IReadOnlyList<Link> linksPreset)
+    {
+        _linksPreset = new List<Link>(linksPreset);
     }
 
     public void CreateWaveColapsMap()

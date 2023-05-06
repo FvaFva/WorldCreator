@@ -1,11 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 public class Link 
 {
     private const int Size = MainSettings.LinkSize;
-    private const int MaxWeight = MainSettings.MaxLinkWeight;
 
     private TypesPoints[,,] _map;
     private List<LinkKey> _keys = new List<LinkKey>();
@@ -21,7 +19,7 @@ public class Link
         _map = map.Map;
         CreateKeys();
         DescripteKeys();
-        Weight = Math.Clamp(map.Weight, 0, MaxWeight);
+        Weight = (int)(map.Weight * map.Coefficient);
     }
 
     public LinkKey GetKey(LinkKeyDirections direction)

@@ -2,19 +2,19 @@
 {
     private TypesPoints _fillerPoint;
 
-    public LowerLinkFactoryWorker(TypesPoints fillerPoint, LinkFactorySupport settings) : base(settings)
+    public LowerLinkFactoryWorker(TypesPoints fillerPoint, LinkFactoryToolsHub settings, float efficiency = 1) : base(settings, efficiency)
     {
         _fillerPoint = fillerPoint;
     }
 
     public override void Work()
     {
-        LinkMap clea = _filler.InitClearMap(_worcResult, 100);
-        LinkMap halfer = _filler.InitClearMap(_worcResult, 80);
-        LinkMap quarterIsle = _filler.InitClearMap(_worcResult, 60);
-        LinkMap quarterLake = _filler.InitClearMap(_worcResult, 60);
-        LinkMap creekOne = _filler.InitClearMap(_worcResult, 40);
-        LinkMap creekTwo = _filler.InitClearMap(_worcResult, 40);
+        LinkMap clea = InitClearMap(LinkWeights.Rare);
+        LinkMap halfer = InitClearMap(LinkWeights.Common);
+        LinkMap quarterIsle = InitClearMap(LinkWeights.Common);
+        LinkMap quarterLake = InitClearMap(LinkWeights.Uncommon);
+        LinkMap creekOne = InitClearMap(LinkWeights.Rare);
+        LinkMap creekTwo = InitClearMap(LinkWeights.Rare);
         
         for (int i = 0; i < _support.FillersHeight; i++)
         {

@@ -17,7 +17,7 @@ public class LinksCompiler
         Link tempLink = new Link(map);
         TryAddLink(tempLink);
 
-        foreach (Link ratatedLink in _rotator.TryRotate(tempLink, map.Map))
+        foreach (Link ratatedLink in _rotator.TryRotate(tempLink, map))
             TryAddLink(ratatedLink);
     }
 

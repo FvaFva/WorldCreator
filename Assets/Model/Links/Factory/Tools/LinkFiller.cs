@@ -57,14 +57,8 @@ public class LinkFiller
             
     }
 
-    public LinkMap InitClearMap(List<LinkMap> temp, int weight)
+    public LinkMap InitClearMap(LinkWeights weight, float coefficient)
     {
-        temp.Add(InitClearMap(weight));
-        return temp[temp.Count - 1];
-    }
-
-    public LinkMap InitClearMap(int weight)
-    {
-        return new LinkMap(new TypesPoints[Size, Size, Size], weight);
+        return new LinkMap(new TypesPoints[Size, Size, Size], weight, coefficient);
     }
 }

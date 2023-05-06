@@ -46,7 +46,7 @@ public class LinkPainter
                 map.Map[IndentPosition + j, i, numberLayer] = paint;
     }
 
-    private void PaintYLine(LinkMap map, int numberLayer, TypesPoints paint)
+    public void PaintYLine(LinkMap map, int numberLayer, TypesPoints paint)
     {
         for (int i = 0; i < Size; i++)
             for (int j = 1; j <= LineWigth; j++)

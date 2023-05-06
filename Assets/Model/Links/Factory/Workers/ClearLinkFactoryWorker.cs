@@ -2,18 +2,18 @@
 
 public class ClearLinkFactoryWorker : BaseLinkFactoryWorker
 {
-    public ClearLinkFactoryWorker(LinkFactorySupport support) : base(support)
+    public ClearLinkFactoryWorker(LinkFactoryToolsHub support, float efficiency = 1) : base(support, efficiency)
     {
     }
 
     public override void Work()
     {
-        LinkMap cleaFerst = _filler.InitClearMap(_worcResult, 100);
-        LinkMap cleaSecond = _filler.InitClearMap(_worcResult, 100);
-        LinkMap halferFerst = _filler.InitClearMap(_worcResult, 100);
-        LinkMap halferSecond = _filler.InitClearMap(_worcResult, 100);
-        LinkMap quarterFerst = _filler.InitClearMap(_worcResult, 100);
-        LinkMap quarterSecond = _filler.InitClearMap(_worcResult, 100);
+        LinkMap cleaFerst = InitClearMap(LinkWeights.Common);
+        LinkMap cleaSecond = InitClearMap(LinkWeights.Common);
+        LinkMap halferFerst = InitClearMap(LinkWeights.Uncommon);
+        LinkMap halferSecond = InitClearMap(LinkWeights.Uncommon);
+        LinkMap quarterFerst = InitClearMap(LinkWeights.Rare);
+        LinkMap quarterSecond = InitClearMap(LinkWeights.Rare);
 
         for (int i = 0; i <= _support.FillersHeight; i++)
         {
