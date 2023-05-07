@@ -1,8 +1,11 @@
-﻿public enum LinkWeights
+﻿namespace Links
 {
-    Common = 100,
-    Uncommon = 85,
-    Rare = 75,
-    ExtraRare = 65,
-    Impossible = 50,
+    public enum LinkWeights
+    {
+        Common = 100,
+        Uncommon = 85,
+        Rare = 75,
+        ExtraRare = 65,
+        Impossible = 50,
+    }
 }

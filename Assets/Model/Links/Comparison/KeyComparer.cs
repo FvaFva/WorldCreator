@@ -1,18 +1,21 @@
-public class KeyComparer
+namespace Links
 {
-    public bool IsKeysCoincide(LinkKey keyA, LinkKey keyB)
+    public class KeyComparer
     {
-        int count = keyA.Keys.Count;
-
-        if(keyA.Keys.Count != count)
-            return false;
-
-        for(int i = 0; i < count; i++)
+        public bool IsKeysCoincide(LinkKey keyA, LinkKey keyB)
         {
-            if (keyA.Keys[i] != keyB.Keys[i])
-                return false;
-        }
+            int count = keyA.Keys.Count;
 
-        return true;
+            if (keyA.Keys.Count != count)
+                return false;
+
+            for (int i = 0; i < count; i++)
+            {
+                if (keyA.Keys[i] != keyB.Keys[i])
+                    return false;
+            }
+
+            return true;
+        }
     }
 }

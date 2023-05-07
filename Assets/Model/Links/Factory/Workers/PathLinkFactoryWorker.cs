@@ -1,24 +1,33 @@
-﻿public class PathLinkFactoryWorker : BaseLinkFactoryWorker
+﻿using Links.FactoryTools;
+using WorldCreating;
+
+namespace Links
 {
-    private TypesPoints _path;
-    private TypesPoints _fillerPoint;
-
-    public PathLinkFactoryWorker(TypesPoints path, TypesPoints fillerPoint, LinkFactoryToolsHub settings, float efficiency = 1)
-        : base(settings, efficiency)
+    namespace Worker
     {
-        _path = path;
-        _fillerPoint = fillerPoint;
-    }
+        public class PathLinkFactoryWorker : BaseLinkFactoryWorker
+        {
+            private TypesPoints _path;
+            private TypesPoints _fillerPoint;
 
-    public override void Work()
-    {
-        LoadWorks(Roader.InitBaseRoads(_path, FillersHeight, Efficiency));
-        LinkMap cross = Roader.CreateCross(_path, FillersHeight, Efficiency, LinkWeights.ExtraRare);
-        AddWork(cross);
+            public PathLinkFactoryWorker(TypesPoints path, TypesPoints fillerPoint, LinkFactoryToolsHub settings, float efficiency = 1)
+                : base(settings, efficiency)
+            {
+                _path = path;
+                _fillerPoint = fillerPoint;
+            }
 
-        for (int i = 0; i < FillersHeight; i++)
-            Filler.FillLayer(WorkResult, i, _fillerPoint);
+            public override void Work()
+            {
+                LoadWorks(Roader.InitBaseRoads(_path, FillersHeight, Efficiency));
+                LinkMap cross = Roader.CreateCross(_path, FillersHeight, Efficiency, LinkWeights.ExtraRare);
+                AddWork(cross);
 
-        Filler.FillSpace(WorkResult, FillersHeight, _fillerPoint);
+                for (int i = 0; i < FillersHeight; i++)
+                    Filler.FillLayer(WorkResult, i, _fillerPoint);
+
+                Filler.FillSpace(WorkResult, FillersHeight, _fillerPoint);
+            }
+        }
     }
 }

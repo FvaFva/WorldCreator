@@ -1,9 +1,12 @@
-public enum TypesPoints
+namespace WorldCreating
 {
-   Space,
-   FillerOne,
-   FillerTwo,
-   Path,
-   Lower,
-   Higher,
+    public enum TypesPoints
+    {
+        Space,
+        FillerOne,
+        FillerTwo,
+        Path,
+        Lower,
+        Higher,
+    }
 }

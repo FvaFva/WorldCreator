@@ -1,19 +1,23 @@
 using System.Collections.Generic;
+using WorldCreating;
 
-public class LinkKey
+namespace Links
 {
-    private List<TypesPoints> _keys = new List<TypesPoints>();
-
-    public LinkKey(LinkKeyDirections direction)
+    public class LinkKey
     {
-        Direction = direction;
-    }
+        private List<TypesPoints> _keys = new List<TypesPoints>();
 
-    public IReadOnlyList<TypesPoints> Keys => _keys;
-    public LinkKeyDirections Direction { get; private set; }
+        public LinkKey(LinkKeyDirections direction)
+        {
+            Direction = direction;
+        }
 
-    public void AddKey(TypesPoints key)
-    {
-        _keys.Add(key);
+        public IReadOnlyList<TypesPoints> Keys => _keys;
+        public LinkKeyDirections Direction { get; private set; }
+
+        public void AddKey(TypesPoints key)
+        {
+            _keys.Add(key);
+        }
     }
 }

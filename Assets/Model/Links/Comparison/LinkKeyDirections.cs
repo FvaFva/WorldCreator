@@ -1,7 +1,10 @@
-﻿public enum LinkKeyDirections
+﻿namespace Links
 {
-    Top,
-    Left,
-    Right,
-    Bottom,
+    public enum LinkKeyDirections
+    {
+        Top,
+        Left,
+        Right,
+        Bottom,
+    }
 }

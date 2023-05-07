@@ -1,11 +1,14 @@
-public class MapPoint
+namespace WorldCreating
 {
-    public MapPoint(int x, int y, int z, TypesPoints type)
+    public class MapPoint
     {
-        Position = new Position(x, y, z);
-        Type = type;
-    }
+        public MapPoint(int x, int y, int z, TypesPoints type)
+        {
+            Position = new Position(x, y, z);
+            Type = type;
+        }
 
-    public Position Position { get; private set; }
-    public TypesPoints Type { get; private set; }
+        public Position Position { get; private set; }
+        public TypesPoints Type { get; private set; }
+    }
 }

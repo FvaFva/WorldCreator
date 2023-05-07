@@ -1,4 +1,5 @@
 using UnityEngine;
+using WorldCreating;
 
 [RequireComponent(typeof(MapRouter))]
 public class WorldFactoryCreator : MonoBehaviour
@@ -14,7 +15,6 @@ public class WorldFactoryCreator : MonoBehaviour
     private MapRouter _router;
     private LinkFactory _loader;
     private MapFactory _factory;
-    private LinkFactoryToolsHub _settings;
 
     private void OnEnable()
     {
@@ -40,11 +40,9 @@ public class WorldFactoryCreator : MonoBehaviour
     private void Awake()
     {
         TryGetComponent<MapRouter>(out _router);
-        _settings = new LinkFactoryToolsHub();
-        _settings.SetFillersHeight(2);
-        _loader = new LinkFactory(_settings);
+        _loader = new LinkFactory(2);
         BuildLinks();
-        _factory = new MapFactory(_loader.Links, _loader.Zero, _countTiles);
+        _factory = new MapFactory(_loader, _countTiles);
         _router.Init(_factory);
     }
 
@@ -72,7 +70,6 @@ public class WorldFactoryCreator : MonoBehaviour
     private void ReloadLinks()
     {
         BuildLinks();
-        _factory.UpdateLinks(_loader.Links);
     }
 
     private void BuildLinks()

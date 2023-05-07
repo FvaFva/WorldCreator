@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 
-public interface IMap
+namespace WorldCreating
 {
-    public IReadOnlyList<MapPoint> Points { get; }
+    public interface IMap
+    {
+        public IReadOnlyList<MapPoint> Points { get; }
+    }
 }

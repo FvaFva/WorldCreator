@@ -1,4 +1,5 @@
 using UnityEngine;
+using WorldCreating;
 
 [CreateAssetMenu(fileName = "New block", menuName = "Map/Block", order = 51)]
 public class BlockPreset : ScriptableObject

@@ -1,4 +1,5 @@
 using UnityEngine;
+using WorldCreating;
 
 [RequireComponent(typeof(MapDescriptor))]
 public class MapRouter : MonoBehaviour

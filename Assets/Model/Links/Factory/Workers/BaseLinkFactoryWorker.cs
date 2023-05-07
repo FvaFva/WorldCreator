@@ -1,51 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
+using Links.FactoryTools;
 
-public abstract class BaseLinkFactoryWorker
+namespace Links
 {
-    private float _efficiency;
-    private List<LinkMap> _workResult = new List<LinkMap>();
-    private LinkFactoryToolsHub _support;
-
-    public BaseLinkFactoryWorker(LinkFactoryToolsHub support, float efficiency)
+    namespace Worker
     {
-        _support = support;
-        _efficiency = Math.Clamp(efficiency, 0, 1);
-    }
+        public abstract class BaseLinkFactoryWorker
+        {
+            private float _efficiency;
+            private List<LinkMap> _workResult = new List<LinkMap>();
+            private LinkFactoryToolsHub _support;
 
-    public IReadOnlyList<LinkMap> WorkResult => _workResult;
+            public BaseLinkFactoryWorker(LinkFactoryToolsHub support, float efficiency)
+            {
+                _support = support;
+                _efficiency = Math.Clamp(efficiency, 0, 1);
+            }
 
-    protected int FillersHeight => _support.FillersHeight;
-    protected LinkFiller Filler => _support.Filler;
-    protected LinkPainter Painter => _support.Painter;
-    protected LinkRoadCreator Roader => _support.Roader;
-    protected float Efficiency => _efficiency;
+            public IReadOnlyList<LinkMap> WorkResult => _workResult;
 
-    public void ReWork()
-    {
-        _workResult.Clear();
-        Work();
-    }
+            protected int FillersHeight => _support.FillersHeight;
+            protected LinkFiller Filler => _support.Filler;
+            protected LinkPainter Painter => _support.Painter;
+            protected LinkRoadCreator Roader => _support.Roader;
+            protected float Efficiency => _efficiency;
 
-    public abstract void Work();
+            public void ReWork()
+            {
+                _workResult.Clear();
+                Work();
+            }
 
-    protected LinkMap InitClearMap(LinkWeights weight)
-    {
-        LinkMap temp = Filler.InitClearMap(weight, _efficiency);
-        _workResult.Add(temp);
-        return temp;
-    }
+            public abstract void Work();
 
-    protected void LoadWorks(List<LinkMap> works)
-    {
-        _workResult.Clear();
+            protected LinkMap InitClearMap(LinkWeights weight)
+            {
+                LinkMap temp = Filler.InitClearMap(weight, _efficiency);
+                _workResult.Add(temp);
+                return temp;
+            }
 
-        foreach (LinkMap map in works)
-            _workResult.Add(map);
-    }
+            protected void LoadWorks(List<LinkMap> works)
+            {
+                _workResult.Clear();
 
-    protected void AddWork(LinkMap work)
-    {
-        _workResult.Add(work);
+                foreach (LinkMap map in works)
+                    _workResult.Add(map);
+            }
+
+            protected void AddWork(LinkMap work)
+            {
+                _workResult.Add(work);
+            }
+        }
     }
 }

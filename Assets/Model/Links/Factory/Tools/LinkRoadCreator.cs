@@ -1,43 +1,50 @@
 ﻿using System.Collections.Generic;
+using WorldCreating;
 
-public class LinkRoadCreator
+namespace Links
 {
-    private LinkPainter _painter;
-    private LinkFiller _filler;
-
-    public LinkRoadCreator(LinkPainter painter, LinkFiller filler)
+    namespace FactoryTools
     {
-        _painter = painter;
-        _filler = filler;
-    }
+        public class LinkRoadCreator
+        {
+            private LinkPainter _painter;
+            private LinkFiller _filler;
 
-    public List<LinkMap> InitBaseRoads(TypesPoints way, int height, float coefficient)
-    {
-        List<LinkMap> temp = new List<LinkMap>();
+            public LinkRoadCreator(LinkPainter painter, LinkFiller filler)
+            {
+                _painter = painter;
+                _filler = filler;
+            }
 
-        LinkMap impasse = CreateEmptyMapInList(temp, LinkWeights.Impossible, coefficient);
-        LinkMap line = CreateEmptyMapInList(temp, LinkWeights.Common, coefficient);
-        LinkMap turn = CreateEmptyMapInList(temp, LinkWeights.Uncommon, coefficient);
+            public List<LinkMap> InitBaseRoads(TypesPoints way, int height, float coefficient)
+            {
+                List<LinkMap> temp = new List<LinkMap>();
 
-        _painter.PaintHalfXLine(impasse, height, way);
-        _painter.PaintXLine(line, height, way);
-        _painter.PaintTurn(turn, height, way);
+                LinkMap impasse = CreateEmptyMapInList(temp, LinkWeights.Impossible, coefficient);
+                LinkMap line = CreateEmptyMapInList(temp, LinkWeights.Common, coefficient);
+                LinkMap turn = CreateEmptyMapInList(temp, LinkWeights.Uncommon, coefficient);
 
-        return temp;
-    }
+                _painter.PaintHalfXLine(impasse, height, way);
+                _painter.PaintXLine(line, height, way);
+                _painter.PaintTurn(turn, height, way);
 
-    public LinkMap CreateCross(TypesPoints way, int height, float coefficient, LinkWeights weights)
-    {
-        LinkMap cross = _filler.InitClearMap(weights, coefficient);
-        _painter.PaintCross(cross, height, way);
+                return temp;
+            }
 
-        return cross;
-    }
+            public LinkMap CreateCross(TypesPoints way, int height, float coefficient, LinkWeights weights)
+            {
+                LinkMap cross = _filler.InitClearMap(weights, coefficient);
+                _painter.PaintCross(cross, height, way);
 
-    private LinkMap CreateEmptyMapInList(List<LinkMap> maps, LinkWeights weight, float coefficient)
-    {
-        LinkMap temp = _filler.InitClearMap(weight, coefficient);
-        maps.Add(temp);
-        return temp;
+                return cross;
+            }
+
+            private LinkMap CreateEmptyMapInList(List<LinkMap> maps, LinkWeights weight, float coefficient)
+            {
+                LinkMap temp = _filler.InitClearMap(weight, coefficient);
+                maps.Add(temp);
+                return temp;
+            }
+        }
     }
 }
