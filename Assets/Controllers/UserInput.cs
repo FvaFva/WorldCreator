@@ -6,7 +6,7 @@ public class UserInput : MonoBehaviour
 {
     [SerializeField] private Button _createRandomMap;
     [SerializeField] private Button _createLinksMap;
-    [SerializeField] private Button _createWafeColapsMap;
+    [SerializeField] private Button _createWaveCollapseMap;
     [SerializeField] private Button _saveCoefficients;
 
     [SerializeField] private Slider _height;
@@ -20,23 +20,25 @@ public class UserInput : MonoBehaviour
 
     private void OnEnable()
     {
-        UpdateLisening(true);
+        UpdateListening(true);
     }
 
     private void OnDisable()
     {
-        UpdateLisening(false);
+        UpdateListening(false);
     }
 
     private void OnLinksRequest()
     {
         RequestedNewMap?.Invoke(1);
     }
+
     private void OnRandomRequest()
     {
         RequestedNewMap?.Invoke(2);
     }
-    private void OnWaveColapsRequest()
+
+    private void OnWaveCollapseRequest()
     {
         RequestedNewMap?.Invoke(3);
     }
@@ -46,16 +48,19 @@ public class UserInput : MonoBehaviour
         ChangedCoefficient?.Invoke(_height.value, _low.value, _bridge.value, _clear.value, _road.value);
     }
 
-    private void UpdateLisening(bool isActive)
+    private void UpdateListening(bool isActive)
     {
         if(isActive)
         {
             if(_createLinksMap != null)
                 _createLinksMap.onClick.AddListener(OnLinksRequest);
+
             if (_createLinksMap != null)
                 _createRandomMap.onClick.AddListener(OnRandomRequest);
+
             if (_createLinksMap != null)
-                _createWafeColapsMap.onClick.AddListener(OnWaveColapsRequest);
+                _createWaveCollapseMap.onClick.AddListener(OnWaveCollapseRequest);
+
             if (_createLinksMap != null)
                 _saveCoefficients.onClick.AddListener(OnCoefficientChanged);
         }
@@ -66,7 +71,7 @@ public class UserInput : MonoBehaviour
             if (_createLinksMap != null)
                 _createRandomMap.onClick.RemoveListener(OnRandomRequest);
             if (_createLinksMap != null)
-                _createWafeColapsMap.onClick.RemoveListener(OnWaveColapsRequest);
+                _createWaveCollapseMap.onClick.RemoveListener(OnWaveCollapseRequest);
             if (_createLinksMap != null)
                 _saveCoefficients.onClick.RemoveListener(OnCoefficientChanged);
         }

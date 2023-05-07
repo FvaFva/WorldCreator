@@ -1,10 +1,10 @@
-public class LinkPainter 
+public class LinkPainter
 {
-    //private const int IndentPosition = MainSettings.LinkSize / 3 - 1;
-    private const int LineWigth = MainSettings.LinerSize;
-    private const int IndentPosition = (MainSettings.LinkSize - LineWigth) / 2 - 1;
+    // private const int IndentPosition = MainSettings.LinkSize / 3 - 1;
+    private const int LineWeight = MainSettings.LinerSize;
+    private const int IndentPosition = ((MainSettings.LinkSize - LineWeight) / 2) - 1;
     private const int Size = MainSettings.LinkSize;
-    private const int Middle = IndentPosition + LineWigth;
+    private const int Middle = IndentPosition + LineWeight;
 
     public void PaintCross(LinkMap map, int numberLayer, TypesPoints paint)
     {
@@ -21,35 +21,47 @@ public class LinkPainter
     public void PaintXLine(LinkMap map, int numberLayer, TypesPoints paint)
     {
         for (int i = 0; i < Size; i++)
-            for (int j = 1; j <= LineWigth; j++)
+        {
+            for (int j = 1; j <= LineWeight; j++)
                 map.Map[i, IndentPosition + j, numberLayer] = paint;
+        }
     }
 
     public void PaintHalfXLine(LinkMap map, int numberLayer, TypesPoints paint)
     {
         for (int i = 0; i <= Middle; i++)
-            for (int j = 1; j <= LineWigth; j++)
+        {
+            for (int j = 1; j <= LineWeight; j++)
                 map.Map[i, IndentPosition + j, numberLayer] = paint;
+        }
     }
 
     public void PaintHalfYLine(LinkMap map, int numberLayer, TypesPoints paint)
     {
         for (int i = 0; i <= Middle; i++)
-            for (int j = 1; j <= LineWigth; j++)
+        {
+            for (int j = 1; j <= LineWeight; j++)
+            {
                 map.Map[IndentPosition + j, i, numberLayer] = paint;
+            }
+        }
     }
 
     public void PaintBackHalfYLine(LinkMap map, int numberLayer, TypesPoints paint)
     {
         for (int i = Middle; i < Size; i++)
-            for (int j = 1; j <= LineWigth; j++)
+        {
+            for (int j = 1; j <= LineWeight; j++)
                 map.Map[IndentPosition + j, i, numberLayer] = paint;
+        }
     }
 
     public void PaintYLine(LinkMap map, int numberLayer, TypesPoints paint)
     {
         for (int i = 0; i < Size; i++)
-            for (int j = 1; j <= LineWigth; j++)
+        {
+            for (int j = 1; j <= LineWeight; j++)
                 map.Map[IndentPosition + j, i, numberLayer] = paint;
+        }
     }
 }

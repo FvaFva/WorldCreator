@@ -22,12 +22,12 @@ public class LinkRotator
         if(baseLink == null)
             return false;
 
-        countInvariants = ÑalculateCountInvariants(baseLink);
+        countInvariants = CalculateCountInvariants(baseLink);
 
         return countInvariants > 1;
     }
 
-    private int ÑalculateCountInvariants(Link link)
+    private int CalculateCountInvariants(Link link)
     {
         bool isXKeysCompare = _keyComparer.IsKeysCoincide(link.Right, link.Left);
         bool isYKeysCompare = _keyComparer.IsKeysCoincide(link.Bottom, link.Top);
@@ -60,9 +60,13 @@ public class LinkRotator
         TypesPoints[,,] temp = new TypesPoints[MainSettings.LinkSize, MainSettings.LinkSize, MainSettings.LinkSize];
 
         for (int k = 0; k < MainSettings.LinkSize; k++)
+        {
             for (int i = 0; i < MainSettings.LinkSize; i++)
+            {
                 for (int j = 0; j < MainSettings.LinkSize; j++)
-                    temp[j,i,k] = map[MainSettings.LinkSize - i - 1, j, k];
+                    temp[j, i, k] = map[MainSettings.LinkSize - i - 1, j, k];
+            }
+        }
 
         return temp;
     }

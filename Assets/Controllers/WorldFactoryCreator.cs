@@ -1,13 +1,13 @@
 using UnityEngine;
 
 [RequireComponent(typeof(MapRouter))]
-public class Initializator : MonoBehaviour
+public class WorldFactoryCreator : MonoBehaviour
 {
-    [SerializeField] private UserInput inputer;
+    [SerializeField] private UserInput _inputter;
     [SerializeField] private int _countTiles;
     [SerializeField] private float _bridgeCoefficient = 1;
     [SerializeField] private float _clearCoefficient = 1;
-    [SerializeField] private float _hightCoefficient = 1;
+    [SerializeField] private float _heightCoefficient = 1;
     [SerializeField] private float _lowerCoefficient = 1;
     [SerializeField] private float _wayCoefficient = 1;
 
@@ -18,21 +18,21 @@ public class Initializator : MonoBehaviour
 
     private void OnEnable()
     {
-        inputer.RequestedNewMap += OnRequestNewMap;
-        inputer.ChangedCoefficient += OnChangedCoefficients;
+        _inputter.RequestedNewMap += OnRequestNewMap;
+        _inputter.ChangedCoefficient += OnChangedCoefficients;
     }
 
     private void OnDisable()
     {
-        inputer.RequestedNewMap -= OnRequestNewMap;
-        inputer.ChangedCoefficient -= OnChangedCoefficients;
+        _inputter.RequestedNewMap -= OnRequestNewMap;
+        _inputter.ChangedCoefficient -= OnChangedCoefficients;
     }
 
     private void OnValidate()
     {
         _bridgeCoefficient = Mathf.Clamp(_bridgeCoefficient, 0, 1);
         _clearCoefficient = Mathf.Clamp(_clearCoefficient, 0, 1);
-        _hightCoefficient = Mathf.Clamp(_hightCoefficient, 0, 1);
+        _heightCoefficient = Mathf.Clamp(_heightCoefficient, 0, 1);
         _lowerCoefficient = Mathf.Clamp(_lowerCoefficient, 0, 1);
         _wayCoefficient = Mathf.Clamp(_wayCoefficient, 0, 1);
     }
@@ -55,13 +55,13 @@ public class Initializator : MonoBehaviour
         if (type == 2)
             _factory.CreateRandomMap();
         if (type == 3)
-            _factory.CreateWaveColapsMap();
+            _factory.CreateWaveCollapseMap();
     }
 
     private void OnChangedCoefficients(float height, float low, float bridge, float clear, float road)
     {
         _bridgeCoefficient = bridge;
-        _hightCoefficient = height;
+        _heightCoefficient = height;
         _lowerCoefficient = low;
         _wayCoefficient = road;
         _clearCoefficient = clear;
@@ -79,12 +79,12 @@ public class Initializator : MonoBehaviour
     {
         _loader.DismissAll();
         _loader.InitClearSpaces(_clearCoefficient);
-        _loader.InitBridgies(TypesPoints.FillerTwo, TypesPoints.Higher, TypesPoints.Middler, _bridgeCoefficient);
-        _loader.InitBridgies(TypesPoints.FillerOne, TypesPoints.Higher, TypesPoints.Middler, _bridgeCoefficient);
+        _loader.InitBridges(TypesPoints.FillerTwo, TypesPoints.Higher, TypesPoints.Path, _bridgeCoefficient);
+        _loader.InitBridges(TypesPoints.FillerOne, TypesPoints.Higher, TypesPoints.Path, _bridgeCoefficient);
         _loader.InitLower(TypesPoints.FillerTwo, _lowerCoefficient);
         _loader.InitLower(TypesPoints.FillerOne, _lowerCoefficient);
-        _loader.InitWays(TypesPoints.FillerOne, TypesPoints.Middler, _wayCoefficient);
-        _loader.InitWays(TypesPoints.FillerTwo, TypesPoints.Middler, _wayCoefficient);
-        _loader.InitHeight(TypesPoints.FillerOne, TypesPoints.Higher, _hightCoefficient);
+        _loader.InitPaths(TypesPoints.FillerOne, TypesPoints.Path, _wayCoefficient);
+        _loader.InitPaths(TypesPoints.FillerTwo, TypesPoints.Path, _wayCoefficient);
+        _loader.InitHeight(TypesPoints.FillerOne, TypesPoints.Higher, _heightCoefficient);
     }
 }

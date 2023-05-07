@@ -13,7 +13,7 @@ public class BlockViewer : MonoBehaviour
     private Vector3 _flyPosition;
     private Coroutine _faller;
 
-    public void DrowPreset(BlockPreset preset)
+    public void DrawPreset(BlockPreset preset)
     {
         if(preset == null)
         {
@@ -37,12 +37,12 @@ public class BlockViewer : MonoBehaviour
 
     private void StartVisualization()
     {
-        StopVisealization();
+        StopVisualization();
         transform.position = _flyPosition;
         _faller = StartCoroutine(FallDown());
     }
 
-    private void StopVisealization()
+    private void StopVisualization()
     {
         if(_faller != null)
             StopCoroutine(_faller);

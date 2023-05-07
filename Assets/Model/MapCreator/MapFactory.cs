@@ -10,23 +10,23 @@ public class MapFactory : IMapFactory
     private int _linksInRow;
     private Random _random = new Random();
 
-    public event Action<IMap> MapCreated;
-
-    public MapFactory(IReadOnlyList<Link> linksPreset, Link Zero, int linksInRow)
+    public MapFactory(IReadOnlyList<Link> linksPreset, Link zero, int linksInRow)
     {
         UpdateLinks(linksPreset);
         _linksInRow = Math.Clamp(linksInRow, MinLinksInRow, linksInRow);
-        _zero = Zero;
+        _zero = zero;
     }
+
+    public event Action<IMap> MapCreated;
 
     public void UpdateLinks(IReadOnlyList<Link> linksPreset)
     {
         _linksPreset = new List<Link>(linksPreset);
     }
 
-    public void CreateWaveColapsMap()
+    public void CreateWaveCollapseMap()
     {
-        WaveColapsCreator creator = new WaveColapsCreator(_zero);
+        WaveCollapseCreator creator = new WaveCollapseCreator(_zero);
         MapCreated?.Invoke(creator.Create(_linksPreset, _linksInRow));
     }
 
@@ -34,21 +34,20 @@ public class MapFactory : IMapFactory
     {
         Map map = new Map();
         int y = -1;
-        bool isLaststartZero = false;
-        int xLenth = (int)Math.Sqrt(_linksPreset.Count);
-        int x = xLenth;
+        bool isLastStartZero = false;
+        int xLength = (int)Math.Sqrt(_linksPreset.Count);
+        int x = xLength;
 
         foreach(Link link in _linksPreset)
         {
-            Position position = UpdateChassePoaition(ref x, ref y, xLenth, ref isLaststartZero);
+            Position position = UpdateChassePosition(ref x, ref y, xLength, ref isLastStartZero);
 
-            foreach (MapPoint point in link.BroadcastLoaclMapToWorld(position))
+            foreach (MapPoint point in link.BroadcastLocalMapToWorld(position))
             {
                 map.AddPoint(point);
             }
         }
 
- 
         MapCreated?.Invoke(map);
     }
 
@@ -60,12 +59,13 @@ public class MapFactory : IMapFactory
         int countPoints = _linksInRow * MainSettings.LinkSize;
 
         for (int i = 0; i < countPoints; i++)
+        {
             for (int j = 0; j < countPoints; j++)
             {
                 TypesPoints currentType = (TypesPoints)_random.Next(countTypes);
                 map.AddPoint(new MapPoint(i, j, 0, currentType));
 
-                for(int k = 1; k < MainSettings.LinkSize; k++)
+                for (int k = 1; k < MainSettings.LinkSize; k++)
                 {
                     if (_random.Next(100) <= chanceForLeveler)
                         map.AddPoint(new MapPoint(i, j, k, currentType));
@@ -73,20 +73,21 @@ public class MapFactory : IMapFactory
                         break;
                 }
             }
+        }
 
         MapCreated?.Invoke(map);
     }
 
-    private Position UpdateChassePoaition(ref int x,ref int y, int leng, ref bool isLaststartZero)
+    private Position UpdateChassePosition(ref int x, ref int y, int length, ref bool isLastStartZero)
     {
-        if (x >= leng)
+        if (x >= length)
         {
-            if (isLaststartZero)
+            if (isLastStartZero)
                 x = 1;
             else
                 x = 0;
 
-            isLaststartZero = !isLaststartZero;
+            isLastStartZero = !isLastStartZero;
             y++;
         }
         else

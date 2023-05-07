@@ -10,6 +10,13 @@ public class MapRouter : MonoBehaviour
 
     public int HarvestedSize => _render.HarvestedSizeX;
 
+    public void Init(IMapFactory creator)
+    {
+        CheckFollow(false);
+        _factory = creator;
+        CheckFollow(true);
+    }
+
     private void Awake()
     {
         if (_render == null)
@@ -20,7 +27,7 @@ public class MapRouter : MonoBehaviour
 
     private void OnEnable()
     {
-        CheckFollow(true); 
+        CheckFollow(true);
     }
 
     private void OnDisable()
@@ -28,21 +35,16 @@ public class MapRouter : MonoBehaviour
         CheckFollow(false);
     }
 
-    public void Init(IMapFactory creator)
-    {
-        CheckFollow(false);
-        _factory = creator;
-        CheckFollow(true);
-    }
-
     private void CheckFollow(bool isActive)
     {
         if(isActive)
+        {
             if (_factory != null)
                 _factory.MapCreated += OnMapReady;
         else
             if (_factory != null)
                 _factory.MapCreated -= OnMapReady;
+        }
     }
 
     private void OnMapReady(IMap map)

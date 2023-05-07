@@ -1,9 +1,9 @@
-public enum TypesPoints 
+public enum TypesPoints
 {
    Space,
    FillerOne,
    FillerTwo,
-   Middler,
+   Path,
    Lower,
-   Higher
+   Higher,
 }

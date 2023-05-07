@@ -1,4 +1,4 @@
-public class KeyComparer 
+public class KeyComparer
 {
     public bool IsKeysCoincide(LinkKey keyA, LinkKey keyB)
     {
@@ -8,8 +8,10 @@ public class KeyComparer
             return false;
 
         for(int i = 0; i < count; i++)
-            if(keyA.Keys[i] != keyB.Keys[i])
+        {
+            if (keyA.Keys[i] != keyB.Keys[i])
                 return false;
+        }
 
         return true;
     }

@@ -15,7 +15,7 @@ public class LinkRoadCreator
     {
         List<LinkMap> temp = new List<LinkMap>();
 
-        LinkMap impasse = CreateEmptyMapInList(temp, LinkWeights.Imposible, coefficient);
+        LinkMap impasse = CreateEmptyMapInList(temp, LinkWeights.Impossible, coefficient);
         LinkMap line = CreateEmptyMapInList(temp, LinkWeights.Common, coefficient);
         LinkMap turn = CreateEmptyMapInList(temp, LinkWeights.Uncommon, coefficient);
 

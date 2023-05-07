@@ -35,41 +35,50 @@ public class MapRender : MonoBehaviour
 
     private void PreloadMap()
     {
-        for (int i = 0; i < _blocksRowsPreload; i++)        
+        for (int i = 0; i < _blocksRowsPreload; i++)
+        {
             for (int j = 0; j < _blocksRowsPreload; j++)
+            {
                 for (int k = 0; k < MainSettings.LinkSize; k++)
-                    _map[i, j, k] = Instantiate(_block, new Vector3(i, k, j),new Quaternion(), transform);                    
+                    _map[i, j, k] = Instantiate(_block, new Vector3(i, k, j), default(Quaternion), transform);
+            }
+        }
     }
 
     private void ClearMap()
     {
         foreach (Coroutine coroutine in _rendering)
+        {
             if (coroutine != null)
                 StopCoroutine(coroutine);
+        }
 
         _rendering.Clear();
 
         for (int i = 0; i < HarvestedSizeX; i++)
+        {
             for (int j = 0; j < HarvestedSizeY; j++)
+            {
                 for (int k = 0; k < MainSettings.LinkSize; k++)
-                    _map[i, j, k].DrowPreset(null);
+                    _map[i, j, k].DrawPreset(null);
+            }
+        }
     }
 
     private IEnumerator Render(BlockPreset[,,] map, int x)
     {
         WaitForSeconds delay = new WaitForSeconds(MainSettings.OptimizationSecondsDelay);
 
-        //RandomizDirection(out int xStart, out int xFinish, out int xSpeed, 0, HarvestedSizeX);
-        RandomizDirection(out int yStart, out int yFinish, out int ySpeed, 0, HarvestedSizeY);
-        
+        RandomizeDirection(out int yStart, out int yFinish, out int ySpeed, 0, HarvestedSizeY);
+
         for (int z = 0; z < MainSettings.LinkSize; z++)
         {
             for (int y = yStart; y != yFinish; y += ySpeed)
             {
-                BlockPreset currenPreset = map[x, y, z];
-                _map[x, y, z].DrowPreset(currenPreset);
+                BlockPreset currentPreset = map[x, y, z];
+                _map[x, y, z].DrawPreset(currentPreset);
 
-                if (currenPreset != null)
+                if (currentPreset != null)
                     yield return delay;
                 else
                     yield return null;
@@ -77,9 +86,9 @@ public class MapRender : MonoBehaviour
         }
     }
 
-    private void RandomizDirection(out int start, out int finish, out int speed, int min, int max)
+    private void RandomizeDirection(out int start, out int finish, out int speed, int min, int max)
     {
-        if(Random.Range(0,2) == 1)
+        if(Random.Range(0, 2) == 1)
         {
             start = min;
             finish = max;

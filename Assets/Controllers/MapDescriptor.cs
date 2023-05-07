@@ -1,7 +1,7 @@
-using System.Collections.Generic;
-using UnityEngine;
-using System.Linq;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 public class MapDescriptor : MonoBehaviour
 {
@@ -21,13 +21,12 @@ public class MapDescriptor : MonoBehaviour
     public BlockPreset[,,] DescriptMap(IReadOnlyList<MapPoint> map)
     {
         if(map == null || map.Count == 0)
-            return new BlockPreset[0,0,0];
+            return new BlockPreset[0, 0, 0];
 
         int countInRow = map.Max(point => point.Position.X) + 1;
         int countRows = map.Max(point => point.Position.Y) + 1;
 
         BlockPreset[,,] descriptedMap = new BlockPreset[countInRow, countRows, MainSettings.LinkSize];
-
 
         foreach(MapPoint point in map)
         {

@@ -7,7 +7,7 @@ public class LinksCompiler
 
     public IReadOnlyList<Link> Links => _links;
 
-    public void Cleare()
+    public void Clear()
     {
         _links.Clear();
     }
@@ -17,15 +17,17 @@ public class LinksCompiler
         Link tempLink = new Link(map);
         TryAddLink(tempLink);
 
-        foreach (Link ratatedLink in _rotator.TryRotate(tempLink, map))
-            TryAddLink(ratatedLink);
+        foreach (Link rotatableLink in _rotator.TryRotate(tempLink, map))
+            TryAddLink(rotatableLink);
     }
 
     public void AddLink(IReadOnlyList<LinkMap> maps)
     {
         if(maps != null)
-            foreach(LinkMap map in maps)
+        {
+            foreach (LinkMap map in maps)
                 AddLink(map);
+        }
     }
 
     private void TryAddLink(Link link)

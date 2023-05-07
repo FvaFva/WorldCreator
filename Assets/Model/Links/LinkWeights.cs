@@ -4,5 +4,5 @@
     Uncommon = 85,
     Rare = 75,
     ExtraRare = 65,
-    Imposible = 50,
+    Impossible = 50,
 }

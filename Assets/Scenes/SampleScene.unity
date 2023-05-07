@@ -1508,7 +1508,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 34.3
+  m_fontSize: 35.85
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2939,7 +2939,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _createRandomMap: {fileID: 1779806037}
   _createLinksMap: {fileID: 994088143}
-  _createWafeColapsMap: {fileID: 392378666}
+  _createWaveCollapseMap: {fileID: 392378666}
   _saveCoefficients: {fileID: 1668695603}
   _height: {fileID: 682671004}
   _low: {fileID: 1294005812}
@@ -3396,7 +3396,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 34.6
+  m_fontSize: 36.2
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3893,11 +3893,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c79d50249513732418e5a1530f85cc1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputer: {fileID: 1643365194}
+  _inputter: {fileID: 1643365194}
   _countTiles: 10
   _bridgeCoefficient: 1
   _clearCoefficient: 1
-  _hightCoefficient: 1
+  _heightCoefficient: 1
   _lowerCoefficient: 1
   _wayCoefficient: 1
 --- !u!1 &1840601482
@@ -4061,7 +4061,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30.55
+  m_fontSize: 32.15
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1

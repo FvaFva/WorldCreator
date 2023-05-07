@@ -3,7 +3,8 @@
     private TypesPoints _heightPoint;
     private TypesPoints _fillerPoint;
 
-    public HeightLinkFactoryWorker(TypesPoints height, TypesPoints filler, LinkFactoryToolsHub settings, float efficiency = 1) : base(settings, efficiency)
+    public HeightLinkFactoryWorker(TypesPoints height, TypesPoints filler, LinkFactoryToolsHub settings, float efficiency = 1)
+        : base(settings, efficiency)
     {
         _heightPoint = height;
         _fillerPoint = filler;
@@ -11,10 +12,10 @@
 
     public override void Work()
     {
-        int height = _support.FillersHeight + 1;
-        _worcResult = _support.Roader.InitBaseRoads(_heightPoint, height, _efficiency);
+        int height = FillersHeight + 1;
+        LoadWorks(Roader.InitBaseRoads(_heightPoint, height, Efficiency));
 
-        LinkMap halfWallImpasse = InitClearMap( LinkWeights.Imposible);
+        LinkMap halfWallImpasse = InitClearMap(LinkWeights.Impossible);
         LinkMap wall = InitClearMap(LinkWeights.Common);
         LinkMap wallAisle = InitClearMap(LinkWeights.Common);
         LinkMap halfWall = InitClearMap(LinkWeights.Rare);
@@ -22,18 +23,18 @@
         LinkMap quarterPatio = InitClearMap(LinkWeights.Uncommon);
         LinkMap quarterTower = InitClearMap(LinkWeights.Common);
 
-        _filler.FillDoubleLayer(halfWallImpasse, TypesPoints.Space, _heightPoint, height);
-        _filler.FillLayer(wall, height, _heightPoint);
-        _filler.FillDoubleLayer(wallAisle, TypesPoints.Space, _heightPoint, height);
-        _filler.FillLayer(quarterTower, height, _heightPoint);
-        _filler.FillDoubleLayer(halfWall, TypesPoints.Space, _heightPoint, height);
-        _filler.FillQuarte(quarterWall, _heightPoint, TypesPoints.Space, height);
-        _filler.FillQuarte(quarterPatio, TypesPoints.Space, _heightPoint, height);
-        _filler.FillQuarte(quarterTower, _heightPoint, TypesPoints.Space, height+1);
-        _painter.PaintTurn(halfWallImpasse, height, _heightPoint);
-        _painter.PaintYLine(wallAisle, height, TypesPoints.Space);
+        Filler.FillDoubleLayer(halfWallImpasse, TypesPoints.Space, _heightPoint, height);
+        Filler.FillLayer(wall, height, _heightPoint);
+        Filler.FillDoubleLayer(wallAisle, TypesPoints.Space, _heightPoint, height);
+        Filler.FillLayer(quarterTower, height, _heightPoint);
+        Filler.FillDoubleLayer(halfWall, TypesPoints.Space, _heightPoint, height);
+        Filler.FillQuarte(quarterWall, _heightPoint, TypesPoints.Space, height);
+        Filler.FillQuarte(quarterPatio, TypesPoints.Space, _heightPoint, height);
+        Filler.FillQuarte(quarterTower, _heightPoint, TypesPoints.Space, height + 1);
+        Painter.PaintTurn(halfWallImpasse, height, _heightPoint);
+        Painter.PaintYLine(wallAisle, height, TypesPoints.Space);
 
         for (int k = 0; k < height; k++)
-            _filler.FillLayer(_worcResult, k, _fillerPoint);           
+            Filler.FillLayer(WorkResult, k, _fillerPoint);
     }
 }
